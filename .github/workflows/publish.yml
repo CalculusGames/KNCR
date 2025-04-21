@@ -71,8 +71,8 @@ jobs:
       # Dependencies
       - name: Install Windows Dependencies
         if: startsWith(matrix.os, 'windows')
-        shell: pwsh
-        run: Invoke-WebRequest -Uri https://git.io/JnHTY -OutFile install_zlib.bat
+        shell: cmd
+        run: powershell -Command "(Invoke-WebRequest -Uri https://git.io/JnHTY -OutFile install_zlib.bat)"; ./install_zlib.bat; del install_zlib.bat
       - name: Install macOS Dependencies
         if: startsWith(matrix.os, 'macos')
         run: brew install zlib
