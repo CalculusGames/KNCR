@@ -12,6 +12,12 @@ import java.io.File
 val logger = KotlinLogging.logger("KNCR")
 
 val os = System.getProperty("os.name").substringBefore(" ").lowercase()
+val publishOs = when (os) {
+    "windows" -> "mingw"
+    "mac" -> "macos"
+    else -> os
+}
+
 val arch = when(System.getProperty("os.arch").lowercase()) {
     "amd64", "x86_64", "x64" -> "x64"
     "aarch64", "arm", "arm64" -> "arm64"
