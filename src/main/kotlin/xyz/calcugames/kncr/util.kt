@@ -21,8 +21,8 @@ val arch = when(System.getProperty("os.arch").lowercase()) {
 
 val globalCompilerOpts = mapOf(
     "windows" to "-DWIN32 -D_WINDOWS",
-    "macos" to "-lpthread -ldl -lm -lrt -I/usr/local/include",
-    "linux" to "-lpthread -ldl -lm -lrt -I/usr/include/x86_64-linux-gnu",
+    "macos" to "-lpthread -ldl -lm -lrt",
+    "linux" to "-lpthread -ldl -lm -lrt",
 )
 
 val globalLinkerOpts = mapOf(
