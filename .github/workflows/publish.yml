@@ -49,6 +49,21 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'gradle'
+      - name: Set up Konan
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.konan/caches
+            ~/.konan/dependencies
+            ~/.konan/kotlin-native-prebuilt-*
+          key: ${{ runner.os }}-konan
+          restore-keys: |
+            ${{ runner.os }}-konan
+      - name: Install Kotlin
+        uses: fwilhe2/setup-kotlin@main
+        with:
+          version: '2.1.20'
+          install-native: true
       # Dependencies
       - name: Install Windows Dependencies
         if: startsWith(matrix.os, 'windows')
