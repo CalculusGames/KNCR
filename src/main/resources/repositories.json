@@ -21,11 +21,20 @@
     "name": "olive",
     "type": "custom",
     "extra": {
-      "build-cmds": "mkdir -p build\nclang -c -o build/libolive.o olive.c -DOLIVEC_IMPLEMENTATION -DSTB_IMAGE_IMPLEMENTATION -DSTB_IMAGE_WRITE_IMPLEMENTATION\nar r build/libolive.a build/libolive.o"
+      "build-cmds": "mkdir -p build\nclang -c -DOLIVEC_IMPLEMENTATION -DSTB_IMAGE_IMPLEMENTATION -DSTB_IMAGE_WRITE_IMPLEMENTATION -DOLIVECDEF= -o build/libolive.o olive.c\nar rcs build/libolive.a build/libolive.o"
     },
     "headers": ".",
     "include-c": true,
     "headerFilter": "olive.c",
     "definition_extra": "#define OLIVEC_IMPLEMENTATION\n#define STB_IMAGE_IMPLEMENTATION\n#define STB_IMAGE_WRITE_IMPLEMENTATION"
+  },
+  {
+    "handle": "madler/zlib",
+    "type": "cmake",
+    "extra": {
+      "config-flags": "-DZLIB_BUILD_TESTING=OFF -DZLIB_BUILD_SHARED=OFF -DZLIB_BUILD_MINIZIP=OFF"
+    },
+    "headers": ".",
+    "headerFilter": "zlib.h"
   }
 ]
