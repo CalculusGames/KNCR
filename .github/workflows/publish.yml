@@ -39,6 +39,10 @@ jobs:
     name: Publish KNCR Builds / ${{ matrix.name }}
     steps:
       - uses: actions/checkout@v4
+      - name: Setup Maven
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: 3.8.4
       - name: Setup Maven Settings
         uses: s4u/maven-settings-action@v3.1.0
         with:
@@ -83,5 +87,7 @@ jobs:
         run: chmod +x ./gradlew
       - name: Run KNCR
         run: ./gradlew clean kncrRun
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Stop Gradle
         run: ./gradlew --stop
