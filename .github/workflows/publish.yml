@@ -71,7 +71,8 @@ jobs:
       # Dependencies
       - name: Install Windows Dependencies
         if: startsWith(matrix.os, 'windows')
-        run: vcpkg install zlib
+        shell: pwsh
+        run: Invoke-WebRequest -Uri https://git.io/JnHTY -OutFile install_zlib.bat
       - name: Install macOS Dependencies
         if: startsWith(matrix.os, 'macos')
         run: brew install zlib
