@@ -32,10 +32,11 @@ tasks {
 
         mainClass.set("xyz.calcugames.kncr.MainKt")
         classpath = sourceSets["main"].runtimeClasspath
-        args = listOf(
+        args = listOfNotNull(
             layout.buildDirectory.file("kncr").get().asFile.absolutePath,
             "https://repo.calcugames.xyz/repository/kncr/",
-            "calcugames"
+            "calcugames",
+            project.findProperty("mvnTask")?.toString(),
         )
         jvmArgs = listOf("-XX:+HeapDumpOnOutOfMemoryError")
     }

@@ -33,6 +33,8 @@ suspend fun main(args: Array<String>) = coroutineScope {
     val mavenRepository = args[2]
     logger.debug { "Maven Repository ID: $mavenRepository" }
 
+    val task = args.getOrElse(3) { "deploy" }
+
     if (!buildDir.exists())
         buildDir.mkdirs()
 
@@ -99,13 +101,15 @@ suspend fun main(args: Array<String>) = coroutineScope {
                 } else {
                     val defFile = repo.generateDefinitionFile(repoDir)
                     Files.writeString(defPath.toPath(), defFile)
-                    logger.debug { "Generated definition file: $defPath" }
+                    logger.debug { "Generated definition file: $defPath\n$defFile" }
                 }
 
                 val cinteropCommand = "$cinterop -def ${repo.name}.def -o ${repo.name}.klib"
                 logger.debug { "Running CInterop Command: $cinteropCommand" }
 
                 cinteropCommand.runCommand(repoDir)
+                defPath.delete()
+                logger.debug { "Deleted definition file: $defPath" }
             }
 
             logger.info { "Publishing ${repo.handle}..." }
@@ -118,17 +122,28 @@ suspend fun main(args: Array<String>) = coroutineScope {
                 logger.debug { "Generated POM file: $pomPath" }
             }
 
-            val publishCommand = "$mvn deploy:deploy-file" +
-                    " -Dfile=${repo.name}.klib" +
-                    " -DpomFile=${repo.name}.pom" +
-                    " -Durl=$mavenRemote" +
-                    " -DrepositoryId=$mavenRepository" +
-                    " -Dpackaging=klib"
+            val publishCommand = when(task) {
+                "install" -> "$mvn install:install-file" +
+                        " -Dfile=${repo.name}.klib" +
+                        " -DpomFile=${repo.name}.pom" +
+                        " -Dpackaging=klib" +
+                        " -DcreateChecksum=true"
+                else -> "$mvn deploy:deploy-file" +
+                        " -Dfile=${repo.name}.klib" +
+                        " -DpomFile=${repo.name}.pom" +
+                        " -Durl=$mavenRemote" +
+                        " -DrepositoryId=$mavenRepository" +
+                        " -Dpackaging=klib"
+            }
+
             logger.debug { "Running Publish Command: $publishCommand" }
             publishCommand.runCommand(repoDir)
 
             pomPath.delete()
+            logger.debug { "Deleted POM file: $pomPath" }
+
             File(repoDir, "${repo.name}.klib").delete()
+            logger.debug { "Deleted Klib file: ${repo.name}.klib" }
 
             logger.info { "Finished work on '${repo.handle}'" }
         }
