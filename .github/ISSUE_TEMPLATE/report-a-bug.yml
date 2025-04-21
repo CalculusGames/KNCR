@@ -1,0 +1,16 @@
+name: Report a Bug
+description: Report a Bug.
+labels: ['unconfirmed bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to report a bug. Please take time to fill out the information below.
+
+  - type: textarea
+    attributes:
+      label: Description
+      placeholder: |
+        Ex: "Incorrect library version"
+    validations:
+      required: true
