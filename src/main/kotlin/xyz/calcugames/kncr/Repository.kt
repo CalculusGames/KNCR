@@ -48,10 +48,10 @@ class Repository(
         if (headerFilter != null)
             logger.debug { "Using header filter '$headerFilter' inside $headerRoot" }
 
-        val glob = if (includeCFiles) "*.{h,c}" else "*.h"
-        val headers = headerRoot.toPath().listDirectoryEntries(glob)
-            .filter { headerFilter == null || Regex(headerFilter).matches(it.fileName.toString()) }
-            .joinToString(" ") { it.relativeTo(repoFolder.toPath()).toString().replace('\\', '/') }
+        val headers = headerRoot.walkTopDown()
+            .filter { it.isFile && (it.extension == "h" || (includeCFiles && it.extension == "c")) }
+            .filter { headerFilter == null || Regex(headerFilter).matches(it.relativeTo(headerRoot).toString().replace('\\', '/')) }
+            .joinToString(" ") { it.relativeTo(repoFolder).toString().replace('\\', '/') }
             .trim()
 
         if (headers.isEmpty())
