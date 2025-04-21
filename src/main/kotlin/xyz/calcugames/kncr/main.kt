@@ -38,13 +38,13 @@ suspend fun main(args: Array<String>) = coroutineScope {
 
     val cinterop = if (System.getenv("KOTLIN_NATIVE_HOME") != null) {
         "${System.getenv("KOTLIN_NATIVE_HOME")}${s}bin${s}cinterop$cinteropSuffix"
-    } else "cinterop"
+    } else "cinterop$cinteropSuffix"
     logger.debug { "Using CInterop Command: $cinterop" }
     "$cinterop -help".runCommand(buildDir, true)
 
     val mvn = if (System.getenv("MAVEN_HOME") != null) {
         "${System.getenv("MAVEN_HOME")}${s}bin${s}mvn$mvnSuffix"
-    } else "mvn"
+    } else "mvn$mvnSuffix"
     logger.debug { "Using Maven Command: $mvn" }
     "$mvn --version".runCommand(buildDir, true)
 
