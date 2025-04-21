@@ -1,0 +1,6 @@
+/gradlew        text eol=lf
+*.bat           text eol=crlf
+*.sh            text eol=lf
+.gitmodules     text eol=lf
+*.jar           binary
+

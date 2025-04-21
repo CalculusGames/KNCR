@@ -1,0 +1,31 @@
+[
+  {
+    "handle": "gmitch215/cmdfx",
+    "type": "cmake",
+    "extra": {
+      "config-flags": "-DTEST_CMDFX=OFF -DSAMPLES_CMDFX=OFF -DDOCS_CMDFX=OFF"
+    }
+  },
+  {
+    "handle": "randy408/libspng",
+    "name": "spng",
+    "type": "cmake",
+    "extra": {
+      "config-flags": "-DSPNG_SHARED=OFF"
+    },
+    "headers": "spng",
+    "include-c": true
+  },
+  {
+    "handle": "tsoding/olive.c",
+    "name": "olive",
+    "type": "custom",
+    "extra": {
+      "build-cmds": "mkdir -p build\nclang -c -o build/libolive.o olive.c -DOLIVEC_IMPLEMENTATION -DSTB_IMAGE_IMPLEMENTATION -DSTB_IMAGE_WRITE_IMPLEMENTATION\nar r build/libolive.a build/libolive.o"
+    },
+    "headers": ".",
+    "include-c": true,
+    "headerFilter": "olive.c",
+    "definition_extra": "#define OLIVEC_IMPLEMENTATION\n#define STB_IMAGE_IMPLEMENTATION\n#define STB_IMAGE_WRITE_IMPLEMENTATION"
+  }
+]

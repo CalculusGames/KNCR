@@ -1,0 +1,72 @@
+name: Publish KNCR Repositories
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+  schedule:
+    - "0 0 * * Sun" # Weekly on Sunday at midnight UTC
+
+jobs:
+  publish:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 180
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: linux-x64
+            os: ubuntu-24.04
+          - name: macos-x64
+            os: macos-13
+          - name: macos-arm64
+            os: macos-15
+          - name: windows-x64
+            os: windows-2025
+
+    permissions:
+      contents: read
+
+    defaults:
+      run:
+        shell: bash
+
+    name: Publish KNCR Builds / ${{ matrix.name }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Maven Settings
+        uses: s4u/maven-settings-action@v3.1.0
+        with:
+          servers: '[{"id": "calcugames", "username": "${{ secrets.NEXUS_USERNAME }}", "password": "${{ secrets.NEXUS_PASSWORD }}"}]'
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'gradle'
+      # Dependencies
+      - name: Install Windows Dependencies
+        if: startsWith(matrix.os, 'windows')
+        run: vcpkg install zlib
+      - name: Install macOS Dependencies
+        if: startsWith(matrix.os, 'macos')
+        run: brew install zlib
+      - name: Install Linux Dependencies
+        if: startsWith(matrix.os, 'linux')
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libz-dev
+      # KNCR
+      - name: Get GCC Information
+        run: g++ --version
+      - name: Change Permissions
+        run: chmod +x ./gradlew
+      - name: Run KNCR
+        run: ./gradlew clean kncrRun
+      - name: Stop Gradle
+        run: ./gradlew --stop
