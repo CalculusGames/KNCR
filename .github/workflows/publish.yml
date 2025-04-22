@@ -86,7 +86,13 @@ jobs:
         run: g++ --version
       - name: Change Permissions
         run: chmod +x ./gradlew
-      - name: Run KNCR
+      - name: Run KNCR (Install)
+        if: ${{ github.event_name == 'pull_request' }}
+        run: ./gradlew clean kncrRun -PmvnTask=install --no-daemon
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run KNCR (Publish)
+        if: ${{ github.event_name != 'pull_request' }}
         run: ./gradlew clean kncrRun --no-daemon
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
