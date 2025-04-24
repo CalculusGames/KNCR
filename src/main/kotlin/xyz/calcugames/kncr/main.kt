@@ -48,7 +48,9 @@ suspend fun main(args: Array<String>) = coroutineScope {
         "${System.getenv("MAVEN_HOME")}${s}bin${s}mvn$mvnSuffix"
     } else "mvn$mvnSuffix"
     logger.debug { "Using Maven Command: $mvn" }
-    "$mvn --version".runCommand(buildDir, true)
+
+    if (task != "build")
+        "$mvn --version".runCommand(buildDir, true)
 
     loadBuildSystem()
     val repositoriesStream = logger::class.java.getResourceAsStream("/repositories.json") ?: error("Failed to load repositories.json")
@@ -101,7 +103,7 @@ suspend fun main(args: Array<String>) = coroutineScope {
                 } else {
                     val defFile = repo.generateDefinitionFile(repoDir)
                     Files.writeString(defPath.toPath(), defFile)
-                    logger.debug { "Generated definition file: $defPath\n$defFile" }
+                    logger.debug { "Generated definition file: $defPath" }
                 }
 
                 val cinteropCommand = "$cinterop -def ${repo.name}.def -o ${repo.name}.klib"
@@ -110,6 +112,14 @@ suspend fun main(args: Array<String>) = coroutineScope {
                 cinteropCommand.runCommand(repoDir)
                 defPath.delete()
                 logger.debug { "Deleted definition file: $defPath" }
+            }
+
+            if (task == "build") {
+                File(repoDir, "${repo.name}.klib").delete()
+                logger.debug { "Deleted Klib file: ${repo.name}.klib" }
+
+                logger.info { "Finished work on '${repo.handle}'" }
+                return@launch
             }
 
             logger.info { "Publishing ${repo.handle}..." }
