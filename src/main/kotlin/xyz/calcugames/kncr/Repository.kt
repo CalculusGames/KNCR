@@ -82,7 +82,7 @@ class Repository(
             |libraryPaths = ${libraryPaths.joinToString(" ")}
             |staticLibraries = ${staticLibraries.joinToString(" ").trim()}
             |compilerOpts = ${globalCompilerOpts[os] ?: ""} -I${repoFolder.absolutePath.replace('\\', '/')} -I${headerRoot.absolutePath.replace('\\', '/')}
-            |linkerOpts = ${globalLinkerOpts[os] ?: ""}
+            |linkerOpts = ${globalLinkerOpts[os] ?: ""} -L${repoFolder.absolutePath.replace('\\', '/')} -L${repoFolder.absolutePath.replace('\\', '/')}/build
         """.trimMargin()
 
         if (definitionExtra.isNotEmpty())
