@@ -8,6 +8,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.decodeFromStream
 import java.io.File
+import kotlin.system.exitProcess
 
 val logger = KotlinLogging.logger("KNCR")
 
@@ -100,6 +101,6 @@ suspend fun String.runCommand(folder: File, pipe: Boolean = false): String? = co
             return@coroutineScope stdout + "\n" + stderr
     } catch (e: Exception) {
         logger.error(e) { "Failed to run command: '$str' in ${folder.absolutePath}; exit code $exitCode" }
-        throw IllegalStateException("Failed to run command: '$str' in ${folder.absolutePath}; exit code $exitCode", e)
+        exitProcess(1)
     }
 }
