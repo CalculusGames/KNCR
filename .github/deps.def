@@ -1,0 +1,6 @@
+# blank definition file for cinterop dependencies
+package = deps
+compilerOpts = -I. -I..
+linkerOpts = -L. -L..
+---
+#include <stdio.h>
