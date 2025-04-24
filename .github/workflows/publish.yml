@@ -52,9 +52,9 @@ jobs:
             ~/.konan/caches
             ~/.konan/dependencies
             ~/.konan/kotlin-native-prebuilt-*
-          key: ${{ runner.os }}-konan
+          key: ${{ runner.os }}-${{ runner.arch }}-konan
           restore-keys: |
-            ${{ runner.os }}-konan
+            ${{ runner.os }}-${{ runner.arch }}-konan
       - name: Install Kotlin
         uses: fwilhe2/setup-kotlin@main
         with:
