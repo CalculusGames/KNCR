@@ -1,10 +1,12 @@
 package xyz.calcugames.kncr
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.decodeFromStream
 import java.io.File
@@ -41,7 +43,7 @@ val globalLinkerOpts = mapOf(
 val buildSystemCommands: MutableMap<String, List<Command>> = mutableMapOf()
 
 @OptIn(ExperimentalSerializationApi::class)
-fun loadBuildSystem() {
+suspend fun loadBuildSystem() = withContext(Dispatchers.IO) {
     logger.info { "Loading Build Systems..." }
     val buildsStream = logger::class.java.getResourceAsStream("/builds.json") ?: error("builds.json not found")
     val builds = json.decodeFromStream<Map<String, List<Command>>>(buildsStream)
@@ -54,7 +56,7 @@ fun loadBuildSystem() {
     logger.info { "Finished Loading Build Systems" }
 }
 
-suspend fun String.runCommand(folder: File, pipe: Boolean = false): String? = coroutineScope {
+suspend fun String.runCommand(folder: File, pipe: Boolean = false): String? = withContext(Dispatchers.Default) {
     val str = this@runCommand
     var exitCode = -1
 
@@ -96,9 +98,9 @@ suspend fun String.runCommand(folder: File, pipe: Boolean = false): String? = co
         }
 
         if (stderr.isEmpty())
-            return@coroutineScope stdout
+            return@withContext stdout
         else
-            return@coroutineScope stdout + "\n" + stderr
+            return@withContext stdout + "\n" + stderr
     } catch (e: Exception) {
         logger.error(e) { "Failed to run command: '$str' in ${folder.absolutePath}; exit code $exitCode" }
         exitProcess(1)
