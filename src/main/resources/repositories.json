@@ -41,5 +41,22 @@
     "handle": "halloweeks/sha1",
     "type": "header-only",
     "headers": "."
+  },
+  {
+    "handle": "benhoyt/inih",
+    "type": "custom",
+    "extra": {
+      "build-cmds": "mkdir -p build\nclang -c -o build/ini.o ini.c\nar rcs build/libini.a build/ini.o"
+    },
+    "headers": ".",
+    "headerFilter": "ini.h"
+  },
+  {
+    "handle": "liteserver/binn",
+    "type": "make",
+    "extra": {
+      "target": "static"
+    },
+    "headers": "src"
   }
 ]
