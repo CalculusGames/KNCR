@@ -169,7 +169,7 @@ suspend fun main(args: Array<String>) = withContext(
                 }
 
                 logger.debug { "Running Publish Command: $publishCommand" }
-                publishCommand.runCommand(repoDir)
+                publishCommand.runCommand(repoDir, true)
 
                 pomPath.delete()
                 logger.debug { "Deleted POM file: $pomPath" }
