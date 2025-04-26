@@ -22,12 +22,16 @@ jobs:
         include:
           - name: linux-x64
             os: ubuntu-24.04
+            parallelism: 0
           - name: macos-x64
             os: macos-13
+            parallelism: 0
           - name: macos-arm64
             os: macos-15
+            parallelism: 0
           - name: windows-x64
             os: windows-2025
+            parallelism: 2
 
     permissions:
       contents: read
