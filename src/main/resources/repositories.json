@@ -36,5 +36,10 @@
     },
     "headers": ".",
     "headerFilter": "zlib.h|build/.*\\.h"
+  },
+  {
+    "handle": "halloweeks/sha1",
+    "type": "header-only",
+    "headers": "."
   }
 ]
