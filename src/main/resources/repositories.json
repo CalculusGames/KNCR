@@ -32,7 +32,7 @@
     "handle": "madler/zlib",
     "type": "cmake",
     "extra": {
-      "config-flags": "-DZLIB_PREFIX=ON -DZLIB_BUILD_TESTING=OFF -DZLIB_BUILD_SHARED=OFF -DZLIB_BUILD_MINIZIP=OFF"
+      "config-flags": "-DZLIB_PREFIX=OFF -DZLIB_BUILD_TESTING=OFF -DZLIB_BUILD_SHARED=OFF -DZLIB_BUILD_MINIZIP=OFF"
     },
     "headers": ".",
     "headerFilter": "zlib.h|build/.*\\.h"
@@ -58,5 +58,10 @@
       "target": "static"
     },
     "headers": "src"
+  },
+  {
+    "handle": "richgel999/miniz",
+    "type": "cmake",
+    "headers": "."
   }
 ]
