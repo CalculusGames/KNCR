@@ -45,17 +45,22 @@ class Repository(
         }
 
         logger.debug { "$handle -- Header root: $headerRoot" }
+        logger.debug { "$handle -- Package Name: $packageName" }
         if (headerFilter != null)
             logger.debug { "Using header filter '$headerFilter' inside $headerRoot" }
 
         val headers = headerRoot.walkTopDown()
             .filter { it.isFile && (it.extension == "h" || (includeCFiles && it.extension == "c")) }
-            .filter { headerFilter == null || Regex(headerFilter).matches(it.relativeTo(headerRoot).toString().replace('\\', '/')) }
-            .joinToString(" ") { it.relativeTo(repoFolder).toString().replace('\\', '/') }
+            .map { it.relativeTo(headerRoot).toString().replace('\\', '/') }
+            .filter { headerFilter == null || Regex(headerFilter).matches(it) }
+            .filter { "test" !in it && "tests" !in it } // exclude test headers
+            .joinToString(" ")
             .trim()
 
         if (headers.isEmpty())
             error("No headers found in $headerRoot")
+
+        logger.debug { "Found ${headers.count { it == ' ' } + 1} Headers" }
 
         val libraryPaths = listOf(
             repoFolder.absolutePath,
@@ -81,7 +86,7 @@ class Repository(
             |package = $packageName
             |libraryPaths = ${libraryPaths.joinToString(" ")}
             |staticLibraries = ${staticLibraries.joinToString(" ").trim()}
-            |compilerOpts = ${globalCompilerOpts[os] ?: ""} -I${repoFolder.absolutePath.replace('\\', '/')} -I${headerRoot.absolutePath.replace('\\', '/')}
+            |compilerOpts = ${globalCompilerOpts[os] ?: ""} -I${repoFolder.absolutePath.replace('\\', '/')} -I${headerRoot.absolutePath.replace('\\', '/')} -I${repoFolder.absolutePath.replace('\\', '/')}/build
             |linkerOpts = ${globalLinkerOpts[os] ?: ""} -L${repoFolder.absolutePath.replace('\\', '/')} -L${repoFolder.absolutePath.replace('\\', '/')}/build
         """.trimMargin()
 

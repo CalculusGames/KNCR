@@ -65,7 +65,11 @@ suspend fun String.runCommand(folder: File, pipe: Boolean = false): String? = wi
         val builder = ProcessBuilder(*parts.toTypedArray())
             .directory(folder)
 
-        if (pipe) builder.inheritIO()
+        if (pipe)
+            builder.inheritIO()
+        else builder
+            .redirectError(ProcessBuilder.Redirect.INHERIT)
+            .redirectOutput(ProcessBuilder.Redirect.DISCARD)
 
         val process = builder.start()
 

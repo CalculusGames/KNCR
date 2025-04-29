@@ -1,17 +1,12 @@
 package xyz.calcugames.kncr
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import java.io.File
 import java.nio.file.Files
-import java.util.concurrent.atomic.AtomicInteger
 
 val json = Json {
     prettyPrint = true
@@ -24,17 +19,8 @@ val s: String = File.separator ?: "/"
 val cinteropSuffix = if (os == "windows") ".bat" else ""
 val mvnSuffix = if (os == "windows") ".cmd" else ""
 
-private fun countChildren(count: AtomicInteger, job: Job) {
-    count.incrementAndGet()
-    job.children.forEach { countChildren(count, it) }
-}
-
 @OptIn(ExperimentalSerializationApi::class)
-suspend fun main(args: Array<String>) = withContext(
-    args[4].run {
-        if (this == "0") Dispatchers.IO else Dispatchers.IO.limitedParallelism(this.toInt())
-    }
-) {
+suspend fun main(args: Array<String>) = coroutineScope {
     logger.debug { "Arguments: ${args.joinToString()}}" }
     logger.info { "Starting KNCR for $os-$arch"}
 
@@ -110,17 +96,23 @@ suspend fun main(args: Array<String>) = withContext(
 
                         for (cmd in commands) {
                             var full = "${cmd.cmd} ${repo.extra[cmd.extra] ?: ""}".trim()
-                            if (os == "windows" && repo.type == "cmake" && cmd.extra == "config-flags")
-                                full += " -G \"MinGW Makefiles\""
+                            if (repo.type == "cmake" && cmd.extra == "config-flags") {
+                                val msys2Home = System.getenv("MSYS2_HOME")
+                                if (msys2Home != null)
+                                    full += " -DCMAKE_PREFIX_PATH=$msys2Home"
 
-                            full.runCommand(repoDir)
+                                if (os == "windows")
+                                    full += " -G \"MinGW Makefiles\""
+                            }
+
+                            full.runCommand(repoDir, logger.isDebugEnabled())
                         }
                     }
 
                     logger.info { "Generating Definition File for ${repo.handle}..." }
                     val defPath = File(repoDir, "${repo.name}.def")
                     if (defPath.exists()) {
-                        logger.warn { "Definition file already exists: $defPath" }
+                        logger.debug { "Definition file already exists: $defPath" }
                     } else {
                         val defFile = repo.generateDefinitionFile(repoDir)
                         Files.writeString(defPath.toPath(), defFile)
@@ -128,7 +120,7 @@ suspend fun main(args: Array<String>) = withContext(
                     }
 
                     val cinteropCommand = "$cinterop -def ${repo.name}.def -o ${repo.name}.klib"
-                    logger.debug { "Running CInterop Command: $cinteropCommand" }
+                    logger.info { "Running CInterop Command: $cinteropCommand" }
 
                     cinteropCommand.runCommand(repoDir)
                     defPath.delete()
@@ -169,7 +161,7 @@ suspend fun main(args: Array<String>) = withContext(
                 }
 
                 logger.debug { "Running Publish Command: $publishCommand" }
-                publishCommand.runCommand(repoDir, true)
+                publishCommand.runCommand(repoDir, logger.isDebugEnabled())
 
                 pomPath.delete()
                 logger.debug { "Deleted POM file: $pomPath" }
@@ -180,15 +172,4 @@ suspend fun main(args: Array<String>) = withContext(
                 logger.info { "Finished work on '${repo.handle}'" }
             }
     }
-
-    if (logger.isDebugEnabled())
-        launch(Dispatchers.Default) {
-            while (job.isActive) {
-                val count = AtomicInteger()
-                countChildren(count, job)
-
-                logger.debug { "Parent job running with $count children" }
-                delay(5000)
-            }
-        }
 }
