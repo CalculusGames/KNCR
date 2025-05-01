@@ -88,8 +88,10 @@ jobs:
       - name: Install CInterop Dependencies
         run: cinterop -def .github/deps.def -o .github/deps.klib -verbose
       # KNCR
-      - name: Get GCC Information
-        run: g++ --version
+      - name: Get Compiler Information
+        run: |
+          g++ --version
+          clang++ --version
       - name: Change Permissions
         run: chmod +x ./gradlew
       - name: Run KNCR (Install)
