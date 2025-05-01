@@ -21,7 +21,7 @@
     "name": "olive",
     "type": "custom",
     "extra": {
-      "build-cmds": "mkdir -p build\nclang -c -DOLIVEC_IMPLEMENTATION -DSTB_IMAGE_IMPLEMENTATION -DSTB_IMAGE_WRITE_IMPLEMENTATION -DOLIVECDEF= -o build/libolive.o olive.c\nar rcs build/libolive.a build/libolive.o"
+      "build-cmds": "mkdir -p build\nclang -c -D_fltused=0 -DOLIVEC_IMPLEMENTATION -DSTB_IMAGE_IMPLEMENTATION -DSTB_IMAGE_WRITE_IMPLEMENTATION -DOLIVECDEF= -o build/libolive.o olive.c\nar rcs build/libolive.a build/libolive.o"
     },
     "headers": ".",
     "include-c": true,

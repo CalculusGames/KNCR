@@ -93,6 +93,8 @@ class Repository(
         if (definitionExtra.isNotEmpty())
             content += "\n---\n$definitionExtra"
 
+        logger.debug { "Generated definition file for $handle:\n$content" }
+
         return content
     }
 
