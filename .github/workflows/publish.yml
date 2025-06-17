@@ -84,7 +84,7 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu')
         run: |
           sudo apt-get update
-          sudo apt-get install -y libz-dev libglx-dev
+          sudo apt-get install -y libz-dev libglx-dev freeglut3-dev
       - name: Install CInterop Dependencies
         run: cinterop -def .github/deps.def -o .github/deps.klib -verbose
       # KNCR
