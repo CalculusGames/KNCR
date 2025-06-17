@@ -64,5 +64,14 @@
     "type": "cmake",
     "headers": ".",
     "headerFilter": "miniz.h|build/.*\\.h"
+  },
+  {
+    "handle": "liballeg/allegro5",
+    "type": "cmake",
+    "extra": {
+      "config-flags": "-DPREFER_STATIC_DEPS=ON -DSHARED=OFF -DWANT_TESTS=OFF -DWANT_EXAMPLES=OFF -DWANT_DEMO=OFF",
+      "post-build-cmd": "cp -r build/include/allegro5 include"
+    },
+    "headerFilter": "^(?!.*\\/internal\\/)(?!.*\\/platform\\/)(?!.*\\/GLext\\/)(?!.*_(android|iphone|osx|windows|x|internal)[^\\/]*\\.h$).*"
   }
 ]

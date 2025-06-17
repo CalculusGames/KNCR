@@ -79,12 +79,12 @@ jobs:
         run: powershell -Command "(Invoke-WebRequest -Uri https://git.io/JnHTY -OutFile install_zlib.bat)"; ./install_zlib.bat; del install_zlib.bat
       - name: Install macOS Dependencies
         if: startsWith(matrix.os, 'macos')
-        run: brew install zlib
+        run: brew install zlib glfw
       - name: Install Linux Dependencies
         if: startsWith(matrix.os, 'ubuntu')
         run: |
           sudo apt-get update
-          sudo apt-get install -y libz-dev
+          sudo apt-get install -y libz-dev libglx-dev
       - name: Install CInterop Dependencies
         run: cinterop -def .github/deps.def -o .github/deps.klib -verbose
       # KNCR
