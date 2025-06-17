@@ -20,7 +20,7 @@ val cinteropSuffix = if (os == "windows") ".bat" else ""
 val mvnSuffix = if (os == "windows") ".cmd" else ""
 
 @OptIn(ExperimentalSerializationApi::class)
-suspend fun main(args: Array<String>) = coroutineScope {
+suspend fun main(args: Array<String>): Unit = coroutineScope {
     logger.debug { "Arguments: ${args.joinToString()}}" }
     logger.info { "Starting KNCR for $os-$arch"}
 
@@ -63,7 +63,7 @@ suspend fun main(args: Array<String>) = coroutineScope {
 
     logger.info { "Starting KNCR Work" }
 
-    val job = launch {
+    launch {
         for (repo in repositories)
             launch {
                 logger.info { "Starting work on '${repo.handle}'" }
@@ -106,6 +106,17 @@ suspend fun main(args: Array<String>) = coroutineScope {
                             }
 
                             full.runCommand(repoDir, logger.isDebugEnabled())
+                        }
+
+                        if (repo.extra["post-build-cmd"] != null) {
+                            logger.info { "Running post-build command for ${repo.handle}" }
+                            val postBuildCmd = repo.extra["post-build-cmd"]!!.trim()
+                            if (postBuildCmd.isNotEmpty()) {
+                                logger.debug { "Post-build command: $postBuildCmd" }
+                                postBuildCmd.runCommand(repoDir, logger.isDebugEnabled())
+                            } else {
+                                logger.warn { "Post-build command is empty for ${repo.handle}" }
+                            }
                         }
                     }
 
