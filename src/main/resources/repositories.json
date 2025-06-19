@@ -73,6 +73,6 @@
       "post-build-cmd": "cp -r build/include/allegro5 include"
     },
     "headers": "include,addons/acodec,addons/audio,addons/color,addons/font,addons/image,addons/memfile,addons/native_dialog,addons/physfs,addons/primitives,addons/ttf,addons/video",
-    "headerFilter": "^allegro5\\/(?!internal\\/)(?!platform\\/)(?!opengl\\/)(?!.*_(android|iphone|osx|windows|x|internal|direct3d)[^\\/]*\\.h$).*"
+    "headerFilter": "^allegro5\\/(?!internal\\/)(?!platform\\/)(?!opengl\\/)(?!.*_(android|iphone|osx|windows|x|internal|direct3d|opengl)[^\\/]*\\.h$).*"
   }
 ]
