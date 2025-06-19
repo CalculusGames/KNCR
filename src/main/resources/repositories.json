@@ -69,9 +69,10 @@
     "handle": "liballeg/allegro5",
     "type": "cmake",
     "extra": {
-      "config-flags": "-DPREFER_STATIC_DEPS=ON -DSHARED=OFF -DWANT_TESTS=OFF -DWANT_EXAMPLES=OFF -DWANT_DEMO=OFF",
+      "config-flags": "-DPREFER_STATIC_DEPS=ON -DSHARED=OFF -DWANT_TESTS=OFF -DWANT_EXAMPLES=OFF -DWANT_DEMO=OFF -DWANT_X11=OFF",
       "post-build-cmd": "cp -r build/include/allegro5 include"
     },
-    "headerFilter": "^(?!.*\\/internal\\/)(?!.*\\/platform\\/)(?!.*\\/GLext\\/)(?!.*_(android|iphone|osx|windows|x|internal|direct3d)[^\\/]*\\.h$).*"
+    "headers": "include,addons/acodec,addons/audio,addons/color,addons/font,addons/image,addons/memfile,addons/native_dialog,addons/physfs,addons/primitives,addons/ttf,addons/video",
+    "headerFilter": "^allegro5\\/(?!internal\\/)(?!platform\\/)(?!opengl\\/)(?!.*_(android|iphone|osx|windows|x|internal|direct3d)[^\\/]*\\.h$).*"
   }
 ]

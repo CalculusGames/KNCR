@@ -38,27 +38,40 @@ class Repository(
     }
 
     fun generateDefinitionFile(repoFolder: File): String {
-        val headerRoot = if (headersRoot == ".") repoFolder else File(repoFolder, headersRoot)
-        if (!headerRoot.exists()) {
-            logger.error { "Header root does not exist: $headerRoot" }
-            return ""
+        val headerRoots = headersRoot.split(',')
+            .map { if (it == ".") repoFolder else File(repoFolder, it.trim()) }
+
+        logger.debug { "Found ${headerRoots.size} header roots: $headerRoots" }
+
+        val headersList = mutableListOf<String>()
+        for (headerRoot in headerRoots) {
+            if (!headerRoot.exists()) {
+                logger.error { "Header root does not exist: $headerRoot" }
+                continue
+            }
+
+            logger.debug { "$handle -- Header root: $headerRoot" }
+            logger.debug { "$handle -- Package Name: $packageName" }
+
+            headersList.addAll(headerRoot.walkTopDown()
+                .filter { it.isFile && (it.extension == "h" || (includeCFiles && it.extension == "c")) }
+                .map { it.relativeTo(headerRoot).toString().replace('\\', '/') }
+            )
         }
 
-        logger.debug { "$handle -- Header root: $headerRoot" }
-        logger.debug { "$handle -- Package Name: $packageName" }
-        if (headerFilter != null)
-            logger.debug { "Using header filter '$headerFilter' inside $headerRoot" }
+        logger.debug { "Found ${headersList.size} headers in '$handle': ${headersList.joinToString("\n") { "-- $it" }}" }
 
-        val headers = headerRoot.walkTopDown()
-            .filter { it.isFile && (it.extension == "h" || (includeCFiles && it.extension == "c")) }
-            .map { it.relativeTo(headerRoot).toString().replace('\\', '/') }
+        if (headerFilter != null)
+            logger.debug { "Using header filter '$headerFilter' inside '$handle'" }
+
+        val headers = headersList
             .filter { headerFilter == null || Regex(headerFilter).matches(it) }
             .filter { "test" !in it && "tests" !in it } // exclude test headers
             .joinToString(" ")
             .trim()
 
         if (headers.isEmpty())
-            error("No headers found in $headerRoot")
+            error("No headers found for '$handle': $headersRoot")
 
         logger.debug { "Found ${headers.count { it == ' ' } + 1} Headers" }
 
@@ -86,7 +99,7 @@ class Repository(
             |package = $packageName
             |libraryPaths = ${libraryPaths.joinToString(" ")}
             |staticLibraries = ${staticLibraries.joinToString(" ").trim()}
-            |compilerOpts = ${globalCompilerOpts[os] ?: ""} -I${repoFolder.absolutePath.replace('\\', '/')} -I${headerRoot.absolutePath.replace('\\', '/')} -I${repoFolder.absolutePath.replace('\\', '/')}/build
+            |compilerOpts = ${globalCompilerOpts[os] ?: ""} -I${repoFolder.absolutePath.replace('\\', '/')} ${headerRoots.joinToString(" ") { "-I${it.absolutePath.replace('\\', '/')}" }} -I${repoFolder.absolutePath.replace('\\', '/')}/build
             |linkerOpts = ${globalLinkerOpts[os] ?: ""} -L${repoFolder.absolutePath.replace('\\', '/')} -L${repoFolder.absolutePath.replace('\\', '/')}/build
         """.trimMargin()
 
