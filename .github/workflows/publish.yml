@@ -104,5 +104,12 @@ jobs:
         run: ./gradlew clean kncrRun --no-daemon
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Archive Logs
+        if: success() || failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kncr-logs-${{ matrix.name }}
+          path: logs
+          if-no-files-found: 'ignore'
       - name: Stop Gradle
         run: ./gradlew --stop
