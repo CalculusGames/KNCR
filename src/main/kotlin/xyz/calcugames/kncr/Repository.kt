@@ -17,6 +17,11 @@ class Repository(
     @SerialName("headers")
     val headersRoot: String = "include",
     val extra: Map<String, String> = emptyMap(),
+    @SerialName("properties")
+    val extraProperties: Map<String, String> = emptyMap(),
+    val compilerOpts: String = "",
+    val includeDirs: List<String> = emptyList(),
+    val linkerOpts : String = "",
     @SerialName("definition_extra")
     val definitionExtra: String = "",
     @SerialName("include-c")
@@ -67,6 +72,7 @@ class Repository(
         val headers = headersList
             .filter { headerFilter == null || Regex(headerFilter).matches(it) }
             .filter { "test" !in it && "tests" !in it } // exclude test headers
+            .distinctBy { it.replace('\\', '/') } // remove duplicates
             .joinToString(" ")
             .trim()
 
@@ -99,8 +105,9 @@ class Repository(
             |package = $packageName
             |libraryPaths = ${libraryPaths.joinToString(" ")}
             |staticLibraries = ${staticLibraries.joinToString(" ").trim()}
-            |compilerOpts = ${globalCompilerOpts[os] ?: ""} -I${repoFolder.absolutePath.replace('\\', '/')} ${headerRoots.joinToString(" ") { "-I${it.absolutePath.replace('\\', '/')}" }} -I${repoFolder.absolutePath.replace('\\', '/')}/build
-            |linkerOpts = ${globalLinkerOpts[os] ?: ""} -L${repoFolder.absolutePath.replace('\\', '/')} -L${repoFolder.absolutePath.replace('\\', '/')}/build
+            |compilerOpts = ${globalCompilerOpts[os] ?: ""} $compilerOpts ${includeDirs.joinToString(" ") { "-I${File(repoFolder, it).absolutePath.replace('\\', '/')}" }} -I${repoFolder.absolutePath.replace('\\', '/')} -I${repoFolder.absolutePath.replace('\\', '/')}/include ${headerRoots.joinToString(" ") { "-I${it.absolutePath.replace('\\', '/')}" }} -I${repoFolder.absolutePath.replace('\\', '/')}/build
+            |linkerOpts = ${globalLinkerOpts[os] ?: ""} $linkerOpts -L${repoFolder.absolutePath.replace('\\', '/')} -L${repoFolder.absolutePath.replace('\\', '/')}/build
+            ${extraProperties.map { "${it.key} = ${it.value}" }.joinToString("\n") { "|${it.trim()}" }}
         """.trimMargin()
 
         if (definitionExtra.isNotEmpty())
