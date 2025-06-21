@@ -90,8 +90,9 @@
       "headers.mingw": "src/win/wgl.h include/allegro5/allegro_windows.h",
       "headers.macos": "include/allegro5/allegro_osx.h"
     },
-    "compilerOpts": "-Wno-implicit-function-declaration -DALLEGRO_UNSTABLE -DALLEGRO_INTERNAL_UNSTABLE -UDEBUGMODE",
+    "compilerOpts": "-Wno-implicit-function-declaration -DALLEGRO_UNSTABLE -DALLEGRO_INTERNAL_UNSTABLE -UDEBUGMODE -DNDEBUG -DALLEGRO_LIB_BUILD -DALLEGRO_STATICLINK",
     "include-c": true,
-    "headerFilter": "^(?:(?!.*(?:/(?:platform|internal|GLext)/))(?!.*[^/]*(?:blenders)[^/]*\\.(?:c)$)(?!.*[^/]*_(?:android|iphone|osx|windows|x|direct3d|raspberrypi|msvc)[^/]*\\.(?:h|c)$)(?:include/.*\\.h|addons/(?!main/)(?:[^/]+/)*allegro5/.*\\.h|src/[^/]+\\.c))$"
+    "headerFilter": "^(?:(?!.*(?:/(?:platform|internal|GLext)/))(?!.*[^/]*(?:blenders)[^/]*\\.(?:c)$)(?!.*[^/]*_(?:android|iphone|osx|windows|x|direct3d|raspberrypi|msvc)[^/]*\\.(?:h|c)$)(?:include/.*\\.h|addons/(?!main/)(?:[^/]+/)*allegro5/.*\\.h|src/[^/]+\\.c))$",
+    "definition_extra": "#define ASSERT(x) ALLEGRO_ASSERT(x)"
   }
 ]
