@@ -88,11 +88,10 @@
     ],
     "properties": {
       "headers.mingw": "src/win/wgl.h include/allegro5/allegro_windows.h",
-      "headers.macos": "include/allegro5/allegro_osx.h",
-      "linkerOpts.linux": "-ldl -lglfw -lX11 -lXrandr -lXcursor -lXi -lXinerama"
+      "headers.macos": "include/allegro5/allegro_osx.h"
     },
     "compilerOpts": "-Wno-implicit-function-declaration -DALLEGRO_UNSTABLE -DALLEGRO_INTERNAL_UNSTABLE -UDEBUGMODE",
     "include-c": true,
-    "headerFilter": "^(?:(?!.*(?:/(?:platform|internal)/))(?!.*[^/]*(?:blenders)[^/]*\\.(?:c)$)(?!.*[^/]*_(?:android|iphone|osx|windows|x|direct3d|raspberrypi|msvc)[^/]*\\.(?:h|c)$)(?:include/.*\\.h|addons/(?!main/)(?:[^/]+/)*allegro5/.*\\.h|src/[^/]+\\.c))$"
+    "headerFilter": "^(?:(?!.*(?:/(?:platform|internal|GLext)/))(?!.*[^/]*(?:blenders)[^/]*\\.(?:c)$)(?!.*[^/]*_(?:android|iphone|osx|windows|x|direct3d|raspberrypi|msvc)[^/]*\\.(?:h|c)$)(?:include/.*\\.h|addons/(?!main/)(?:[^/]+/)*allegro5/.*\\.h|src/[^/]+\\.c))$"
   }
 ]

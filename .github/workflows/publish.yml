@@ -84,7 +84,7 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu')
         run: |
           sudo apt-get update
-          sudo apt-get install -y libdumb1-dev libflac-dev libfreetype6-dev libgl1-mesa-dev libglx-dev libglu1-mesa-dev libgtk-3-dev libjpeg-dev libopenal-dev libopusfile-dev libphysfs-dev libpng-dev libpulse-dev libtheora-dev libvorbis-dev libwebp-dev libxcursor-dev libxext-dev libxinerama-dev libxpm-dev libxrandr-dev libxxf86vm-dev pkg-config freeglut3-dev libz-dev xorg
+          sudo apt-get install -y libdumb1-dev libflac-dev libfreetype6-dev mesa-common-dev libgl1-mesa-dev libglx-dev libglu1-mesa-dev libgtk-3-dev libjpeg-dev libopenal-dev libopusfile-dev libphysfs-dev libpng-dev libpulse-dev libtheora-dev libvorbis-dev libwebp-dev libxcursor-dev libxext-dev libxinerama-dev libxpm-dev libxrandr-dev libxxf86vm-dev pkg-config freeglut3-dev libz-dev xorg
       - name: Install CInterop Dependencies
         run: cinterop -def .github/deps.def -o .github/deps.klib -verbose
       # KNCR
