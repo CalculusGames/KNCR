@@ -86,8 +86,12 @@
       "addons/ttf",
       "addons/video"
     ],
+    "properties": {
+      "headers.mingw": "src/win/wgl.h include/allegro5/allegro_windows.h",
+      "headers.macos": "include/allegro5/allegro_osx.h"
+    },
     "compilerOpts": "-Wno-implicit-function-declaration -DALLEGRO_UNSTABLE -DALLEGRO_INTERNAL_UNSTABLE -UDEBUGMODE",
     "include-c": true,
-    "headerFilter": "^(?:(?!src/blenders\\.c)(?!.*(?:/(?:platform|internal|opengl)/))(?!.*[^/]*_(?:android|iphone|osx|windows|x|direct3d|opengl|raspberrypi|msvc)[^/]*\\.(?:h|c)$)(?:include/.*\\.h|addons/(?!main/)(?:[^/]+/)*allegro5/.*\\.h|src/[^/]+\\.c))$"
+    "headerFilter": "^(?:(?!.*(?:/(?:platform|internal|opengl)/))(?!.*[^/]*(?:blenders)[^/]*\\.(?:c)$)(?!.*[^/]*_(?:android|iphone|osx|windows|x|direct3d|opengl|raspberrypi|msvc)[^/]*\\.(?:h|c)$)(?:include/.*\\.h|addons/(?!main/)(?:[^/]+/)*allegro5/.*\\.h|src/[^/]+\\.c))$"
   }
 ]
