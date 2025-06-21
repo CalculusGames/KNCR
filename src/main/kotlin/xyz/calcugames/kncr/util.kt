@@ -29,13 +29,13 @@ val arch = when(System.getProperty("os.arch").lowercase()) {
 }
 
 val globalCompilerOpts = mapOf(
-    "windows" to "-DWIN32 -D_WINDOWS",
-    "macos" to "-lpthread -ldl -lm -lrt",
-    "linux" to "-lpthread -ldl -lm -lrt",
+    "windows" to "-DWIN32 -D_WINDOWS -D__MINGW32__ -D__MINGW64__",
+    "macos" to "-I/usr/local/include -I/usr/include -macosx -I/opt/homebrew/include",
+    "linux" to "-I/usr/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu",
 )
 
 val globalLinkerOpts = mapOf(
-    "windows" to "-DWIN32 -D_WINDOWS",
+    "windows" to "-DWIN32 -D_WINDOWS -D__MINGW32__ -D__MINGW64__",
     "macos" to "-lpthread -ldl -lm -lrt",
     "linux" to "-lpthread -ldl -lm -lrt",
 )
