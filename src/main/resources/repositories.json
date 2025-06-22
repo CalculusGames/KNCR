@@ -69,7 +69,7 @@
     "handle": "liballeg/allegro5",
     "type": "cmake",
     "extra": {
-      "config-flags": "-DWANT_MONOLITH=ON -DPREFER_STATIC_DEPS=ON -DSHARED=OFF -DWANT_TESTS=OFF -DWANT_EXAMPLES=OFF -DWANT_DEMO=OFF -DWANT_X11=OFF -DWANT_RELEASE_LOGGING=OFF",
+      "config-flags": "-DWANT_MONOLITH=ON -DPREFER_STATIC_DEPS=ON -DSHARED=OFF -DWANT_TESTS=OFF -DWANT_EXAMPLES=OFF -DWANT_DEMO=OFF -DWANT_X11=OFF",
       "post-build-cmd": "cp -r build/include/allegro5 include"
     },
     "headers": ".",
@@ -90,9 +90,8 @@
       "headers.mingw": "src/win/wgl.h include/allegro5/allegro_windows.h",
       "headers.macos": "include/allegro5/allegro_osx.h"
     },
-    "compilerOpts": "-Wno-implicit-function-declaration -DALLEGRO_UNSTABLE -DALLEGRO_INTERNAL_UNSTABLE -UDEBUGMODE -DNDEBUG -DALLEGRO_LIB_BUILD -DALLEGRO_STATICLINK",
+    "compilerOpts": "-Wno-implicit-function-declaration -DALLEGRO_UNSTABLE -DALLEGRO_INTERNAL_UNSTABLE -UDEBUGMODE -DALLEGRO_LIB_BUILD -DALLEGRO_STATICLINK",
     "include-c": true,
-    "headerFilter": "^(?:(?!.*(?:/(?:platform|internal|GLext)/))(?!.*[^/]*(?:blenders)[^/]*\\.(?:c)$)(?!.*[^/]*_(?:android|iphone|osx|windows|x|direct3d|raspberrypi|msvc)[^/]*\\.(?:h|c)$)(?:include/.*\\.h|addons/(?!main/)(?:[^/]+/)*allegro5/.*\\.h|src/[^/]+\\.c))$",
-    "definition_extra": "#define ASSERT(x) ALLEGRO_ASSERT(x)"
+    "headerFilter": "^(?:(?!.*(?:/(?:platform|internal|GLext)/))(?!.*[^/]*(?:blenders)[^/]*\\.(?:c)$)(?!.*[^/]*_(?:android|iphone|osx|windows|x|direct3d|raspberrypi|msvc)[^/]*\\.(?:h|c)$)(?:include/.*\\.h|addons/(?!main/)(?:[^/]+/)*allegro5/.*\\.h|src/[^/]+\\.c))$"
   }
 ]

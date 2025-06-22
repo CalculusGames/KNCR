@@ -1,7 +1,7 @@
 {
   "cmake": [
     {"cmd": "cmake -B build -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=bin", "extra": "config-flags"},
-    {"cmd": "cmake --build build --config Release", "extra": "build-flags"}
+    {"cmd": "cmake --build build --config Debug", "extra": "build-flags"}
   ],
   "header-only": [],
   "make": [
