@@ -24,7 +24,7 @@ jobs:
             os: ubuntu-24.04
             parallelism: 0
           - name: macos-x64
-            os: macos-13
+            os: macos-15-intel
             parallelism: 0
           - name: macos-arm64
             os: macos-15
