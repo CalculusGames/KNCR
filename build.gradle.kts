@@ -18,7 +18,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
 
     runtimeOnly("ch.qos.logback:logback-classic:1.5.18")
-    implementation("io.github.oshai:kotlin-logging:7.0.7")
+    implementation("io.github.oshai:kotlin-logging:8.0.01")
 }
 
 tasks {
